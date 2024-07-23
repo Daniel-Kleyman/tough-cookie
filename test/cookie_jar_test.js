@@ -541,4 +541,66 @@ vows
       }
     }
   })
+  .addBatch({
+    "Issue #282 - Prototype pollution": {
+      "when setting a cookie with the domain __proto__": {
+        topic: function() {
+          const jar = new tough.CookieJar(undefined, {
+            rejectPublicSuffixes: false
+          });
+          // try to pollute the prototype
+          jar.setCookieSync(
+            "Slonser=polluted; Domain=__proto__; Path=/notauth",
+            "https://__proto__/admin"
+          );
+          jar.setCookieSync(
+            "Auth=Lol; Domain=google.com; Path=/notauth",
+            "https://google.com/"
+          );
+          this.callback();
+        },
+        "results in a cookie that is not affected by the attempted prototype pollution": function() {
+          const pollutedObject = {};
+          assert(pollutedObject["/notauth"] === undefined);
+        }
+      },
+    },
+    "Issue #282 - Prototype pollution - V2.5.0 Patch": {
+      "when setting a cookie with the domain __proto__ and path keys": {
+        topic: function() {
+          var jar = new tough.CookieJar(undefined, {
+            rejectPublicSuffixes: false
+          });
+          var objectKeysFunctionRef = Object.keys;
+          // try to pollute the prototype
+          jar.setCookieSync(
+            "Slonser=polluted; Domain=__proto__; Path=keys",
+            "https://__proto__/admin"
+          );
+          
+          return objectKeysFunctionRef;
+        },
+        "results in Object.keys() is not affected by the attempted prototype pollution": function(objectKeysFunctionRef) {
+          assert.strictEqual(objectKeysFunctionRef, Object.keys);
+        }
+      },
+      "When setting a cookie with the domain __proto__ and path __defineGetter__": {
+        topic: function() {
+          var jar = new tough.CookieJar(undefined, {
+            rejectPublicSuffixes: false
+          });
+          jar.setCookieSync(
+            "Slonser=polluted; Domain=__proto__; Path=__defineGetter__",
+            "https://__proto__/admin"
+          );
+          this.callback();
+        },
+        "results in Object.__defineGetter__() is not affected by the attempted prototype pollution": function() {
+          const pollutedObject = { "foo": "bar" };
+          assert(pollutedObject.foo === "bar");
+        }
+      }
+    }
+  })
   .export(module);
+  
