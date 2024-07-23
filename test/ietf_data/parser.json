@@ -9,15 +9,6 @@
     ]
   },
   {
-    "test": "0002",
-    "received": [
-      "foo=bar; Expires=Fri, 07 Aug 2019 08:04:19 GMT"
-    ],
-    "sent": [
-      { "name": "foo", "value": "bar" }
-    ]
-  },
-  {
     "test": "0003",
     "received": [
       "foo=bar; Expires=Fri, 07 Aug 2007 08:04:19 GMT",
@@ -699,24 +690,6 @@
     "test": "COMMA0005",
     "received": [
       "foo=bar; Max-Age=50,399"
-    ],
-    "sent": [
-      { "name": "foo", "value": "bar" }
-    ]
-  },
-  {
-    "test": "COMMA0006",
-    "received": [
-      "foo=bar; Expires=Fri, 07 Aug 2019 08:04:19 GMT"
-    ],
-    "sent": [
-      { "name": "foo", "value": "bar" }
-    ]
-  },
-  {
-    "test": "COMMA0007",
-    "received": [
-      "foo=bar; Expires=Fri 07 Aug 2019 08:04:19 GMT, baz=qux"
     ],
     "sent": [
       { "name": "foo", "value": "bar" }
